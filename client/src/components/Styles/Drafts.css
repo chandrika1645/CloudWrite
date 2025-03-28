@@ -1,0 +1,91 @@
+/* Container */
+.drafts-container {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  
+  /* Header */
+  .drafts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .drafts-header h2 {
+    font-size: 20px;
+    color: #333;
+  }
+  
+  /* New Draft Button */
+  .new-draft-btn {
+    background: #1a73e8; /* Google Drive Blue */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .new-draft-btn:hover {
+    background: #135abc;
+  }
+  
+  /* Drafts Grid */
+  .drafts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  
+  /* Draft Card */
+  .draft-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .draft-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Draft Title */
+  .draft-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #202124;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Draft Preview */
+  .draft-preview {
+    font-size: 14px;
+    color: #5f6368;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  /* No Drafts */
+  .no-drafts {
+    color: #888;
+    font-style: italic;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .drafts-grid {
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+  }
+  
