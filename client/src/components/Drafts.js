@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import getAuthToken from "../util/getAuthUtil";
+import "./Styles/Drafts.css";
 
 const DraftsList = () => {
   const [drafts, setDrafts] = useState([]);
@@ -29,91 +30,34 @@ const DraftsList = () => {
   }, [fetchDrafts]);
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.heading}>Your Drafts</h2>
-      <button style={styles.newDraftButton} onClick={() => navigate("/editor")}>
-        + New Draft
-      </button>
+    <div className="drafts-container">
+      <div className="drafts-header">
+        <h2>Your Drafts</h2>
+        <button className="new-draft-btn" onClick={() => navigate("/editor")}>
+          + New Draft
+        </button>
+      </div>
 
-      <div style={styles.draftGrid}>
+      <div className="drafts-grid">
         {drafts.length === 0 ? (
-          <p style={styles.noDrafts}>No drafts available</p>
+          <p className="no-drafts">No drafts available</p>
         ) : (
           drafts.map((draft) => (
-            <div key={draft._id} style={styles.card}>
-              <h3 style={styles.title}>{draft.title || "Untitled Draft"}</h3>
-              <p style={styles.preview}>{draft.content.substring(0, 50)}...</p>
-              <div style={styles.actions}>
-                <button
-                  style={styles.editButton}
-                  onClick={() => navigate(`/editor/${draft._id}`)}
-                >
-                  Edit
-                </button>
-              </div>
+            <div
+              key={draft._id}
+              className="draft-card"
+              onClick={() => navigate(`/editor/${draft._id}`)}
+            >
+              <h3 className="draft-title">{draft.title || "Untitled Draft"}</h3>
+              <p className="draft-preview">
+                {draft.content ? draft.content.substring(0, 50) + "..." : ""}
+              </p>
             </div>
           ))
         )}
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    maxWidth: "800px",
-    margin: "20px auto",
-    padding: "20px",
-    textAlign: "center",
-  },
-  heading: {
-    color: "#333",
-    marginBottom: "10px",
-  },
-  newDraftButton: {
-    padding: "10px 15px",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    marginBottom: "15px",
-  },
-  draftGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-    gap: "15px",
-  },
-  card: {
-    padding: "15px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: "16px",
-    fontWeight: "bold",
-    marginBottom: "5px",
-  },
-  preview: {
-    fontSize: "14px",
-    color: "#666",
-  },
-  actions: {
-    marginTop: "10px",
-  },
-  editButton: {
-    padding: "6px 10px",
-    backgroundColor: "#28a745",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-  noDrafts: {
-    color: "#888",
-    fontStyle: "italic",
-  },
 };
 
 export default DraftsList;
