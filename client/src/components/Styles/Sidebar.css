@@ -1,0 +1,77 @@
+/* Sidebar Styles */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: #f5f5f5; /* Light gray, similar to Google Drive */
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-right: 1px solid #ddd;
+    transition: width 0.3s ease;
+  }
+  
+  /* Sidebar Button */
+  .sidebar .new-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #1a73e8; /* Google blue */
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 24px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .sidebar .new-btn:hover {
+    background-color: #135abc;
+  }
+  
+  /* Sidebar Menu */
+  .sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin-top: 16px;
+  }
+  
+  .sidebar-menu li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    color: #444;
+    transition: background 0.3s ease;
+  }
+  
+  .sidebar-menu li:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Responsive Sidebar */
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 60px;
+      align-items: center;
+    }
+  
+    .sidebar .new-btn span {
+      display: none;
+    }
+  
+    .sidebar-menu li {
+      justify-content: center;
+    }
+  
+    .sidebar-menu li span {
+      display: none;
+    }
+  }
+  

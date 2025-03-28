@@ -5,6 +5,9 @@ import getAuthToken from "./util/getAuthUtil";
 import { FaPen } from "react-icons/fa";
 import "./App.css";
 import DraftsList from "./components/Drafts";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "./components/Sidebar.js";
+
 
 function App() {
   const [letter, setLetter] = useState(null);
@@ -70,21 +73,25 @@ function App() {
 
   return (
     <div className="app-container">
-      <div className="navbar">
-        <Login onLogin={setUserId} />
+      <div className="sidbar">
+        <Sidebar />
       </div>
-
-      <div className="main-content">
-        <div className="drafts-section">
-          <h2>Your Recents</h2>
-          <DraftsList />
+      <div className="main">
+        <div className="navbar">
+          <Login onLogin={setUserId} />
         </div>
+        <div className="main-content">
+          <div className="drafts-section">
+            <h2>Your Recents</h2>
+            <DraftsList />
+          </div>
 
-        {userId && (
-          <button className="pen-button" onClick={() => navigate("/editor")}>
-            <FaPen />
-          </button>
-        )}
+          {userId && (
+            <button className="pen-button" onClick={() => navigate("/editor")}>
+              <FaPen />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
