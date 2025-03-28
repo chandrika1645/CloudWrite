@@ -14,17 +14,11 @@ const Sidebar = () => {
 
       {/* Sidebar Menu */}
       <ul className="sidebar-menu">
-        <li>
+        <li onClick={() => navigate("/")}>
           📁 <span>My Drive</span>
         </li>
-        <li>
+        <li onClick={() => navigate("/recents")}>
           🔄 <span>Recent</span>
-        </li>
-        <li>
-          ⭐ <span>Starred</span>
-        </li>
-        <li>
-          🗑️ <span>Trash</span>
         </li>
       </ul>
     </div>

@@ -64,14 +64,17 @@ const Login = ({ onLogin }) => {
             )}
             <h2 style={styles.heading}>{user.name || "User"}</h2>
           </div>
-          <button style={styles.button} onClick={handleLogout}>
+          <button style={styles.button} onClick={handleLogout} >
             Logout
           </button>
         </div>
       ) : (
-        <button style={styles.button} onClick={handleLogin}>
+        <div style={styles.parentContainer}>
+
+        <button style={styles.loginButton} onClick={handleLogin}>
           Sign in with Google
         </button>
+        </div>
       )}
     </div>
   );
@@ -108,6 +111,13 @@ const styles = {
     borderRadius: "50%",
     objectFit: "cover",
   },
+  parentContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    width: "100vw",
+  },
   button: {
     padding: "8px 12px",
     marginRight: "15px",
@@ -119,6 +129,16 @@ const styles = {
     borderRadius: "5px",
     cursor: "pointer",
     transition: "background 0.3s ease",
+  },
+  loginButton: {
+    padding: "12px 24px",
+    fontSize: "18px",
+    border: "none",
+    borderRadius: "8px",
+    background: "#007bff",
+    color: "#fff",
+    cursor: "pointer",
+    transition: "0.3s ease",
   },
 };
 

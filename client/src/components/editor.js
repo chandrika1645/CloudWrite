@@ -3,15 +3,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import getAuthToken from "../util/getAuthUtil";
+import "./Styles/Editor.css"
 
 const Editor = ({ userId }) => {
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { draftId } = useParams(); 
+  const { draftId } = useParams();
 
   useEffect(() => {
+    console.log("Draft ID:", draftId); // Debugging line
     if (draftId) {
       const fetchDraft = async () => {
         try {
@@ -61,7 +63,7 @@ const Editor = ({ userId }) => {
 
       if (response.ok) {
         alert("Draft saved successfully!");
-        navigate("/"); 
+        navigate("/");
       } else {
         alert("Error saving draft");
       }
@@ -69,6 +71,38 @@ const Editor = ({ userId }) => {
       console.error("Save error:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!draftId) return;
+
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this draft?"
+    );
+    if (!isConfirmed) return;
+
+    const token = getAuthToken();
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/drafts/${draftId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        alert("Draft deleted successfully!");
+        navigate("/");
+      } else {
+        alert("Error deleting draft");
+      }
+    } catch (error) {
+      console.error("Error deleting draft:", error);
     }
   };
 
@@ -83,22 +117,39 @@ const Editor = ({ userId }) => {
         style={styles.titleInput}
       />
       <ReactQuill value={content} onChange={setContent} style={styles.editor} />
-      <button
-        onClick={handleSave}
-        style={styles.saveButton}
-        disabled={isLoading}
-      >
-        {isLoading ? "Saving..." : "Save Draft"}
-      </button>
+      <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+        <button
+          onClick={handleSave}
+          style={styles.saveButton}
+          disabled={isLoading}
+        >
+          {isLoading ? "Saving..." : "Save Draft"}
+        </button>
+
+        <button
+          style={styles.deleteBtn}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete();
+          }}
+        >
+          🗑️
+        </button>
+      </div>
     </div>
   );
 };
 
 const styles = {
-  container: { maxWidth: "600px", margin: "20px auto", padding: "20px" },
-  titleInput: { width: "100%", padding: "10px", marginBottom: "10px" },
+  container: { maxWidth: "900px", margin: "20px auto", padding: "20px" },
+  titleInput: { width: "97%", padding: "10px", marginBottom: "10px" },
   editor: { minHeight: "200px", marginBottom: "10px" },
   saveButton: { padding: "10px", backgroundColor: "#007bff", color: "#fff" },
+  deleteBtn: {
+    padding: "10px",
+    backgroundColor: "red",
+    color: "#fff",
+  },
 };
 
 export default Editor;

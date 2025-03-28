@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import getAuthToken from "../util/getAuthUtil";
 import "./Styles/Drafts.css";
 
 const DraftsList = () => {
   const [drafts, setDrafts] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchDrafts = useCallback(async () => {
     const token = getAuthToken();
@@ -25,9 +26,31 @@ const DraftsList = () => {
     }
   }, []);
 
+  const fetchRecentDrafts = useCallback(async () => {
+    const token = getAuthToken();
+    try {
+      const response = await fetch("http://localhost:8080/api/drafts/latest", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setDrafts(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Error loading recent drafts:", error);
+      setDrafts([]);
+    }
+  }, []);
+
   useEffect(() => {
-    fetchDrafts();
-  }, [fetchDrafts]);
+    if (location.pathname === "/recents") {
+      fetchRecentDrafts();
+    } else {
+      fetchDrafts();
+    }
+  }, [location.pathname, fetchDrafts, fetchRecentDrafts]);
 
   return (
     <div className="drafts-container">
@@ -50,7 +73,11 @@ const DraftsList = () => {
             >
               <h3 className="draft-title">{draft.title || "Untitled Draft"}</h3>
               <p className="draft-preview">
-                {draft.content ? draft.content.substring(0, 50) + "..." : ""}
+                {draft.content
+                  ? new DOMParser()
+                      .parseFromString(draft.content, "text/html")
+                      .body.textContent.substring(0, 230) + "..."
+                  : ""}
               </p>
             </div>
           ))
