@@ -1,12 +1,12 @@
 /* styles.css */
 .app-container {
   display: flex;
-  flex-direction: column; /* Stack navbar on top */
   height: 100vh;
 }
-
-.navbar {
+.main{
   width: 100%;
+}
+.navbar {
   background-color: #f8f9fa;
   padding: 15px 20px;
   display: flex;
