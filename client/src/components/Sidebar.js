@@ -3,7 +3,7 @@ import "./Styles/Sidebar.css";
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   return (
     <div className="sidebar">
       {/* New Button */}
@@ -19,6 +19,9 @@ const Sidebar = () => {
         </li>
         <li onClick={() => navigate("/recents")}>
           🔄 <span>Recent</span>
+        </li>
+        <li onClick={() => navigate("/google-drive/uploads")}>
+          ☁️ <span>Uploads</span>
         </li>
       </ul>
     </div>

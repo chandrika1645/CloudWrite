@@ -20,13 +20,31 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+provider.addScope("https://www.googleapis.com/auth/drive.file");
+provider.setCustomParameters({
+  prompt: "consent",
+  access_type: "offline",
+});
+
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
-    const token = await user.getIdToken(); 
-    return { uid: user.uid, email: user.email, displayName: user.displayName, token };
 
+    const token = await user.getIdToken();
+
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+
+    console.log("cred", credential);
+    const googleOAuthToken = credential.accessToken;
+
+    return {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      token,
+      googleOAuthToken,
+    };
   } catch (error) {
     console.error("Google Sign-In Error:", error.message);
     alert(`Sign-in failed: ${error.message}`);

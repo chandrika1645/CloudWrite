@@ -3,7 +3,6 @@ import { signInWithGoogle, logout } from "../firebase";
 
 const Login = ({ onLogin }) => {
   const [user, setUser] = useState(null);
-  const [showLogout, setShowLogout] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -31,7 +30,7 @@ const Login = ({ onLogin }) => {
         if (response.ok) {
           setUser(data.user);
           localStorage.setItem("jwtToken", data.jwtToken);
-          localStorage.setItem("user", JSON.stringify(data.user)); 
+          localStorage.setItem("user", JSON.stringify(data.user));
           onLogin(data.user.uid);
         } else {
           console.error("Authentication failed:", data.error);
@@ -50,6 +49,23 @@ const Login = ({ onLogin }) => {
     onLogin(null);
   };
 
+  const handleConnectDrive = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const clientId = process.env.CLIEND_ID;
+    const redirectUri = process.env.REDIRECT_URI;
+    const scope = process.env.SCOPE;
+
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&scope=${encodeURIComponent(
+      scope
+    )}&access_type=offline&prompt=consent&state=${encodeURIComponent(
+      user.uid
+    )}`;
+
+    window.location.href = url;
+  };
+
   return (
     <div style={styles.container}>
       {user ? (
@@ -64,16 +80,20 @@ const Login = ({ onLogin }) => {
             )}
             <h2 style={styles.heading}>{user.name || "User"}</h2>
           </div>
-          <button style={styles.button} onClick={handleLogout} >
-            Logout
-          </button>
+          <div>
+            <button style={styles.button} onClick={handleConnectDrive}>
+              connect Google-drive
+            </button>
+            <button style={styles.button} onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
         </div>
       ) : (
         <div style={styles.parentContainer}>
-
-        <button style={styles.loginButton} onClick={handleLogin}>
-          Sign in with Google
-        </button>
+          <button style={styles.loginButton} onClick={handleLogin}>
+            Sign in with Google
+          </button>
         </div>
       )}
     </div>
@@ -82,8 +102,8 @@ const Login = ({ onLogin }) => {
 const styles = {
   container: {
     display: "flex",
-    alignItems: "center", 
-    justifyContent: "space-between", 
+    alignItems: "center",
+    justifyContent: "space-between",
     width: "100%",
     height: "60px",
     padding: "0 20px",

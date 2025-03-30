@@ -24,5 +24,7 @@ app.use(cookieParser());
 
 app.use("/api/drafts", require("./routes/drafts"));
 app.use("/api/auth", require("./routes/auth"));
+app.use("/google-drive", require("./routes/docs"));
+
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

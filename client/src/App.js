@@ -1,47 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Login from "./components/Login";
-import Editor from "./components/editor";
-import getAuthToken from "./util/getAuthUtil";
+import Editor from "./components/editor.js";
 import "./App.css";
 import DraftsList from "./components/Drafts";
-import { useNavigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import UploadedDocs from "./components/Docs.js";
 
 function App() {
-  const [letter, setLetter] = useState(null);
   const [userId, setUserId] = useState(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!userId) return;
-
-    const fetchLatestDraft = async () => {
-      const token = getAuthToken();
-
-      try {
-        const response = await fetch(
-          "http://localhost:8080/api/drafts/latest",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const data = await response.json();
-        if (data.content) {
-          setLetter(data.content);
-        }
-      } catch (error) {
-        console.error("Error loading latest draft:", error);
-      }
-    };
-
-    fetchLatestDraft();
-  }, [userId]);
 
   return (
     <div className="app-container">
@@ -72,14 +39,20 @@ function App() {
               <div className="drafts-section">
                 <Routes>
                   <Route path="/" element={<DraftsList />} />
-                  <Route path="/editor/:draftId" element={<Editor userId={userId} />} />
+                  <Route
+                    path="/editor/:draftId"
+                    element={<Editor userId={userId} />}
+                  />
                   <Route path="/editor" element={<Editor userId={userId} />} />
                   <Route
                     path="/editor/:draftId"
                     element={<Editor userId={userId} />}
                   />
-                  <Route path="/recents" element={<DraftsList/>} />
-
+                  <Route path="/recents" element={<DraftsList />} />
+                  <Route
+                    path="/google-drive/uploads"
+                    element={<UploadedDocs />}
+                  />
                 </Routes>
               </div>
             </div>

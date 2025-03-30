@@ -3,17 +3,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import getAuthToken from "../util/getAuthUtil";
-import "./Styles/Editor.css"
+import "./Styles/Editor.css";
+import { getAuth } from "firebase/auth";
 
 const Editor = ({ userId }) => {
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const navigate = useNavigate();
   const { draftId } = useParams();
 
   useEffect(() => {
-    console.log("Draft ID:", draftId); // Debugging line
     if (draftId) {
       const fetchDraft = async () => {
         try {
@@ -106,6 +107,43 @@ const Editor = ({ userId }) => {
     }
   };
 
+  const handleUpload = async () => {
+    if (!title.trim() || !content.trim()) {
+      alert("Title and content cannot be empty!");
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const token = getAuthToken();
+
+      const response = await fetch(
+        "http://localhost:8080/google-drive/upload",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ title, content }),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Uploaded Successfully! View it on Google Drive.");
+      } else {
+        alert("Upload failed: " + data.error);
+      }
+    } catch (error) {
+      console.error("Upload Error:", error);
+      alert("An error occurred while uploading.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <div style={styles.container}>
       <h2>{draftId ? "Edit Draft" : "New Draft"}</h2>
@@ -127,6 +165,14 @@ const Editor = ({ userId }) => {
         </button>
 
         <button
+          onClick={handleUpload}
+          style={styles.saveButton}
+          disabled={isUploading}
+        >
+          {isUploading ? "Uploading..." : "Upload Doc"}
+        </button>
+
+        <button
           style={styles.deleteBtn}
           onClick={(e) => {
             e.stopPropagation();
@@ -144,11 +190,19 @@ const styles = {
   container: { maxWidth: "900px", margin: "20px auto", padding: "20px" },
   titleInput: { width: "97%", padding: "10px", marginBottom: "10px" },
   editor: { minHeight: "200px", marginBottom: "10px" },
-  saveButton: { padding: "10px", backgroundColor: "#007bff", color: "#fff" },
+  saveButton: {
+    padding: "10px",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+  },
   deleteBtn: {
     padding: "10px",
     backgroundColor: "red",
     color: "#fff",
+    border: "none",
+    borderRadius: "5px",
   },
 };
 

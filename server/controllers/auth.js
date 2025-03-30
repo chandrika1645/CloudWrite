@@ -18,13 +18,12 @@ const generateJWT = (userId, email) => {
 
 const googleAuth = async (req, res) => {
   const { token } = req.body;
+
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);
-
     const { uid, email, name, picture } = decodedToken;
 
     let user = await User.findOne({ uid });
-
     if (!user) {
       user = await User.create({ uid, email, name, picture });
     }
