@@ -35,7 +35,6 @@ export const signInWithGoogle = async () => {
 
     const credential = GoogleAuthProvider.credentialFromResult(result);
 
-    console.log("cred", credential);
     const googleOAuthToken = credential.accessToken;
 
     return {

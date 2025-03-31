@@ -2,15 +2,10 @@ import { useEffect, useState } from "react";
 import getAuthToken from "../util/getAuthUtil";
 
 const fetchDocs = async () => {
-  const token = getAuthToken();
-
-  if (!token) {
-    alert("Please log in first!");
-    return;
-  }
 
   const response = await fetch("http://localhost:8080/google-drive", {
-    headers: { Authorization: `Bearer ${token}` },
+    method: "GET",
+    credentials: "include", 
   });
 
   const data = await response.json();
@@ -26,7 +21,8 @@ const UploadedDocs = () => {
 
   return (
     <div>
-      <h2>Uploaded Documents</h2>
+      <h2 style={{marginLeft: "20px"}}>Uploaded Documents</h2>
+      {docs.length > 0 ? (
       <div style={styles.gridContainer}>
         {docs.map((doc) => (
           <div
@@ -50,6 +46,9 @@ const UploadedDocs = () => {
           </div>
         ))}
       </div>
+      ) : (
+        <p style={styles.noDocsMessage}>No documents available.</p>
+      )}
     </div>
   );
 };
@@ -89,6 +88,11 @@ const styles = {
     overflow: "hidden",
     position: "relative",
     borderRadius: "8px",
+  },
+  noDocsMessage: {
+    textAlign: 'center',
+    fontSize: '16px',
+    color: '#666',
   },
 };
 

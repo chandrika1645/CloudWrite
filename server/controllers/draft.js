@@ -3,7 +3,7 @@ const Draft = require("../models/Draft");
 const saveDraft = async (req, res) => {
   const { content, draftId, title } = req.body;
   const userId = req.token.uid;
-
+console.log("reached here", userId, req.body);
   if (!content || !title) {
     return res.status(400).json({ error: "Missing fields" });
   }
@@ -60,7 +60,7 @@ const getUserDraftsByDraftId = async (req, res) => {
 const getLatestDraft = async (req, res) => {
   const userId = req.token.uid;
   try {
-    const latestDraft = await Draft.find({ userId }).sort({ createdAt: -1 });
+    const latestDraft = await Draft.find({ userId }).sort({ updatedAt: -1 });
     return res.json(latestDraft || { content: "" });
   } catch (error) {
     return res.status(500).json({ error: "Error fetching draft" });

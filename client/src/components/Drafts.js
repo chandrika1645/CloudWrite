@@ -7,16 +7,13 @@ const DraftsList = () => {
   const [drafts, setDrafts] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const headerText = location.pathname === '/recents' ? 'Recent Drafts' : 'Your Drafts';
 
   const fetchDrafts = useCallback(async () => {
-    const token = getAuthToken();
     try {
       const response = await fetch("http://localhost:8080/api/drafts", {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+        credentials: "include", 
       });
       const data = await response.json();
       setDrafts(Array.isArray(data) ? data : []);
@@ -31,10 +28,7 @@ const DraftsList = () => {
     try {
       const response = await fetch("http://localhost:8080/api/drafts/latest", {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+        credentials: "include", 
       });
       const data = await response.json();
       setDrafts(Array.isArray(data) ? data : []);
@@ -55,7 +49,7 @@ const DraftsList = () => {
   return (
     <div className="drafts-container">
       <div className="drafts-header">
-        <h2>Your Drafts</h2>
+        <h2>{headerText}</h2>
         <button className="new-draft-btn" onClick={() => navigate("/editor")}>
           + New Draft
         </button>
@@ -63,7 +57,7 @@ const DraftsList = () => {
 
       <div className="drafts-grid">
         {drafts.length === 0 ? (
-          <p className="no-drafts">No drafts available</p>
+          <p className="no-drafts">No drafts Found</p>
         ) : (
           drafts.map((draft) => (
             <div

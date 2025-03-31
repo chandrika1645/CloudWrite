@@ -22,7 +22,8 @@ const Editor = ({ userId }) => {
           const response = await fetch(
             `http://localhost:8080/api/drafts/${draftId}`,
             {
-              headers: { Authorization: `Bearer ${token}` },
+              method: "GET",
+              credentials: "include",
             }
           );
           if (response.ok) {
@@ -47,12 +48,11 @@ const Editor = ({ userId }) => {
     setIsLoading(true);
 
     try {
-      const token = getAuthToken();
       const response = await fetch(`http://localhost:8080/api/drafts/save`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           userId,
@@ -89,10 +89,7 @@ const Editor = ({ userId }) => {
         `http://localhost:8080/api/drafts/${draftId}`,
         {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+          credentials: "include",
         }
       );
 
@@ -122,10 +119,7 @@ const Editor = ({ userId }) => {
         "http://localhost:8080/google-drive/upload",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: "include",
           body: JSON.stringify({ title, content }),
         }
       );

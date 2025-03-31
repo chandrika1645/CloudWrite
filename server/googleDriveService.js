@@ -38,7 +38,6 @@ const uploadToDrive = async (title, content, refreshToken) => {
       fields: "id",
     });
 
-    console.log("Uploaded file ID:", response.data.id);
     return response.data.id;
   } catch (error) {
     console.error("Upload to Drive failed:", error.message);

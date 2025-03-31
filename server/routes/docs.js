@@ -4,38 +4,7 @@ const User = require("../models/User");
 const verifyToken = require("../middleware/userAuth");
 const router = express.Router();
 const { google } = require("googleapis");
-
-const oauth2Client = new google.auth.OAuth2(
-  process.env.CLIENT_ID,
-  process.env.CLIENT_SECRET,
-  process.env.REDIRECT_URI,
-);
-
-router.get("/callback", async (req, res) => {
-  console.log("OAuth callback received query:", req.query);
-
-  const { code, state } = req.query;
-
-  if (!code || !state) {
-    return res.status(400).send("Missing code or uid");
-  }
-
-  try {
-    const { tokens } = await oauth2Client.getToken(code);
-
-    console.log("REFRESH TOKEN:", tokens.refresh_token);
-
-    const user = await User.findOneAndUpdate(
-      { uid: state },
-      { refreshToken: tokens.refresh_token }
-    );
-
-    res.redirect("http://localhost:3000/");
-  } catch (err) {
-    console.error("OAuth callback error:", err);
-    res.status(500).send("Auth failed");
-  }
-});
+const axios = require("axios");
 
 router.post("/upload", verifyToken, async (req, res) => {
   try {

@@ -3,6 +3,8 @@ const admin = require("../config/firebase");
 const User = require("../models/User");
 const fs = require("fs");
 const path = require("path");
+const { google } = require("googleapis");
+const axios = require("axios");
 
 const privateKey = fs.readFileSync(
   path.join(__dirname, "../private.pem"),
@@ -16,49 +18,101 @@ const generateJWT = (userId, email) => {
   });
 };
 
+const oauth2Client = new google.auth.OAuth2(
+  process.env.CLIENT_ID,
+  process.env.CLIENT_SECRET,
+  process.env.REDIRECT_URI
+);
+
 const googleAuth = async (req, res) => {
-  const { token } = req.body;
+  const { code } = req.query;
+
+  if (!code) {
+    return res.status(400).send("Missing code or uid");
+  }
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    const { uid, email, name, picture } = decodedToken;
+    const { tokens } = await oauth2Client.getToken(code);
 
-    let user = await User.findOne({ uid });
-    if (!user) {
-      user = await User.create({ uid, email, name, picture });
+    console.log("REFRESH TOKEN:", tokens.refresh_token);
+
+    const userInfoResponse = await axios.get(
+      "https://www.googleapis.com/oauth2/v3/userinfo", {
+              headers: { Authorization: `Bearer ${tokens.access_token}` },
+
+  });
+
+    const user = userInfoResponse.data;
+
+    console.log(user);
+
+    let data = await User.findOne({ uid: user.sub });
+    if (data) {
+      data = await User.findOneAndUpdate(
+        { uid: user.sub },
+        { refreshToken: tokens.refresh_token },
+        { new: true }
+      );
+    } else {
+      data = await User.create({
+        uid: user.sub,
+        email: user.email,
+        name: user.name,
+        picture: user.picture,
+        refreshToken: tokens.refresh_token,
+      });
     }
 
     let jwtToken;
 
     try {
-      jwtToken = generateJWT(user.uid, user.email);
+      jwtToken = generateJWT(user.sub, user.email);
     } catch (jwtError) {
       console.error("Error generating JWT:", jwtError);
     }
 
-    res.cookie("token", jwtToken, {
+    res.cookie("jwtToken", jwtToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-    });
+      secure: false,
+      maxAge: 3600000,
+    }); 
 
-    return res.json({
-      success: true,
-      jwtToken,
-      user: {
-        uid: user.uid,
-        email: user.email,
-        name: user.name,
-        picture: user.picture,
-      },
-    });
-  } catch (error) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.redirect("http://localhost:3000/");
+
+    // return res.json({
+    //   success: true,
+    //   jwtToken,
+    //   user: {
+    //     uid: user.sub,
+    //     email: user.email,
+    //     name: user.name,
+    //     picture: user.picture,
+    //   },
+    // });
+  } catch (err) {
+    console.error("OAuth callback error:", err);
+    return res.status(500).send("Auth failed");
   }
 };
 
+const userProfile = async (req, res) => {
+  try {
+    const userId = req.token.uid;
+
+    const user = await User.findOne({ uid: userId }).select('-refreshToken');;
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    return res.json({ user });
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+
 const logout = (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("jwtToken");
   res.json({ success: true, message: "Logged out" });
 };
 
-module.exports = { googleAuth, logout };
+module.exports = { googleAuth, logout, userProfile };

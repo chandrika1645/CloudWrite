@@ -4,64 +4,65 @@ import { signInWithGoogle, logout } from "../firebase";
 const Login = ({ onLogin }) => {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const token = localStorage.getItem("jwtToken");
+  const fetchUser = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/profile", {
+        method: "GET",
+        credentials: "include", 
+      });
 
-    if (storedUser && token) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      onLogin(parsedUser.uid);
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
+          localStorage.setItem("user", JSON.stringify(data.user));
+          onLogin(data.user.uid);
+      } else {
+        console.log("User not authenticated");
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
     }
-  }, [onLogin]);
+  };
 
-  const handleLogin = async () => {
-    const userData = await signInWithGoogle();
-    if (userData?.token) {
-      try {
-        const response = await fetch("http://localhost:8080/api/auth/google", {
+  useEffect(() => {
+    fetchUser(); 
+  }, []);
+
+  const handleLogout = async() => {
+    try {
+        const response = await fetch("http://localhost:8080/api/auth/logout", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token: userData.token }),
-          credentials: "include",
+          credentials: "include", 
         });
 
         const data = await response.json();
         if (response.ok) {
-          setUser(data.user);
-          localStorage.setItem("jwtToken", data.jwtToken);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          onLogin(data.user.uid);
+            setUser(null);
+            localStorage.removeItem("user");
+            onLogin(null);
         } else {
           console.error("Authentication failed:", data.error);
         }
       } catch (error) {
         console.error("Login error:", error);
       }
-    }
   };
 
-  const handleLogout = () => {
-    logout();
-    setUser(null);
-    localStorage.removeItem("jwtToken");
-    localStorage.removeItem("user");
-    onLogin(null);
-  };
-
-  const handleConnectDrive = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const clientId = process.env.CLIEND_ID;
-    const redirectUri = process.env.REDIRECT_URI;
-    const scope = process.env.SCOPE;
-
+  const handleLogin = () => {
+    const clientId="682944726651-bkdbs22ntpdqlqsot4oj7cjcjbvd4d29.apps.googleusercontent.com";
+    const redirectUri="http://localhost:8080/api/auth/google-callback";
+    const scope = [
+        "https://www.googleapis.com/auth/drive.file", 
+        "openid",       
+        "profile",      
+        "email"          
+      ].join(" ");
+    
     const url = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(
       redirectUri
     )}&scope=${encodeURIComponent(
       scope
-    )}&access_type=offline&prompt=consent&state=${encodeURIComponent(
-      user.uid
-    )}`;
+    )}&access_type=offline&prompt=consent`;
 
     window.location.href = url;
   };
@@ -81,9 +82,6 @@ const Login = ({ onLogin }) => {
             <h2 style={styles.heading}>{user.name || "User"}</h2>
           </div>
           <div>
-            <button style={styles.button} onClick={handleConnectDrive}>
-              connect Google-drive
-            </button>
             <button style={styles.button} onClick={handleLogout}>
               Logout
             </button>

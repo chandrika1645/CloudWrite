@@ -44,10 +44,6 @@ function App() {
                     element={<Editor userId={userId} />}
                   />
                   <Route path="/editor" element={<Editor userId={userId} />} />
-                  <Route
-                    path="/editor/:draftId"
-                    element={<Editor userId={userId} />}
-                  />
                   <Route path="/recents" element={<DraftsList />} />
                   <Route
                     path="/google-drive/uploads"
