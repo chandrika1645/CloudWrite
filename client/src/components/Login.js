@@ -4,17 +4,24 @@ const Login = ({ onLogin }) => {
   const [user, setUser] = useState(null);
 
   const fetchUser = async () => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUser(user);
+      onLogin(user.uid);
+      return;
+    }
     try {
       const response = await fetch("http://localhost:8080/api/auth/profile", {
         method: "GET",
-        credentials: "include", 
+        credentials: "include",
       });
 
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          onLogin(data.user.uid);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        onLogin(data.user.uid);
       } else {
         console.log("User not authenticated");
       }
@@ -24,45 +31,43 @@ const Login = ({ onLogin }) => {
   };
 
   useEffect(() => {
-    fetchUser(); 
+    fetchUser();
   }, []);
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     try {
-        const response = await fetch("http://localhost:8080/api/auth/logout", {
-          method: "POST",
-          credentials: "include", 
-        });
+      const response = await fetch("http://localhost:8080/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
 
-        const data = await response.json();
-        if (response.ok) {
-            setUser(null);
-            localStorage.removeItem("user");
-            onLogin(null);
-        } else {
-          console.error("Authentication failed:", data.error);
-        }
-      } catch (error) {
-        console.error("Login error:", error);
+      const data = await response.json();
+      if (response.ok) {
+        setUser(null);
+        localStorage.removeItem("user");
+        onLogin(null);
+      } else {
+        console.error("Authentication failed:", data.error);
       }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   const handleLogin = () => {
-    const clientId=process.env.REACT_APP_GOOGLE_CLIENT_ID;
-    const redirectUri=process.env.REACT_APP_GOOGLE_REDIRECT_URI;
+    const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    const redirectUri = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
 
     const scope = [
-        "https://www.googleapis.com/auth/drive.file", 
-        "openid",       
-        "profile",      
-        "email"          
-      ].join(" ");
-    
+      "https://www.googleapis.com/auth/drive.file",
+      "openid",
+      "profile",
+      "email",
+    ].join(" ");
+
     const url = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(
       redirectUri
-    )}&scope=${encodeURIComponent(
-      scope
-    )}&access_type=offline&prompt=consent`;
+    )}&scope=${encodeURIComponent(scope)}&access_type=offline&prompt=consent`;
 
     window.location.href = url;
   };
