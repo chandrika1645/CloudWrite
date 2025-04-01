@@ -3,7 +3,6 @@ const Draft = require("../models/Draft");
 const saveDraft = async (req, res) => {
   const { content, draftId, title } = req.body;
   const userId = req.token.uid;
-console.log("reached here", userId, req.body);
   if (!content || !title) {
     return res.status(400).json({ error: "Missing fields" });
   }

@@ -9,6 +9,10 @@ const axios = require("axios");
 router.post("/upload", verifyToken, async (req, res) => {
   try {
     const { title, content } = req.body;
+    
+    if(!title || !content){
+        return res.send("Input fields are required.")
+    }
     const userId = req.token.uid;
 
     const user = await User.findOne({ uid: userId });

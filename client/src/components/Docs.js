@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import getAuthToken from "../util/getAuthUtil";
 
 const fetchDocs = async () => {
 

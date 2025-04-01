@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const admin = require("../config/firebase");
 const User = require("../models/User");
 const fs = require("fs");
 const path = require("path");
@@ -34,17 +33,14 @@ const googleAuth = async (req, res) => {
   try {
     const { tokens } = await oauth2Client.getToken(code);
 
-    console.log("REFRESH TOKEN:", tokens.refresh_token);
-
     const userInfoResponse = await axios.get(
-      "https://www.googleapis.com/oauth2/v3/userinfo", {
-              headers: { Authorization: `Bearer ${tokens.access_token}` },
-
-  });
+      "https://www.googleapis.com/oauth2/v3/userinfo",
+      {
+        headers: { Authorization: `Bearer ${tokens.access_token}` },
+      }
+    );
 
     const user = userInfoResponse.data;
-
-    console.log(user);
 
     let data = await User.findOne({ uid: user.sub });
     if (data) {
@@ -75,7 +71,7 @@ const googleAuth = async (req, res) => {
       httpOnly: true,
       secure: false,
       maxAge: 3600000,
-    }); 
+    });
 
     return res.redirect("http://localhost:3000/");
 
@@ -99,7 +95,7 @@ const userProfile = async (req, res) => {
   try {
     const userId = req.token.uid;
 
-    const user = await User.findOne({ uid: userId }).select('-refreshToken');;
+    const user = await User.findOne({ uid: userId }).select("-refreshToken");
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -108,7 +104,6 @@ const userProfile = async (req, res) => {
     return res.status(401).json({ message: "Invalid token" });
   }
 };
-
 
 const logout = (req, res) => {
   res.clearCookie("jwtToken");

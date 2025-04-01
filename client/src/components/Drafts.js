@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import getAuthToken from "../util/getAuthUtil";
 import "./Styles/Drafts.css";
 
 const DraftsList = () => {
@@ -24,7 +23,6 @@ const DraftsList = () => {
   }, []);
 
   const fetchRecentDrafts = useCallback(async () => {
-    const token = getAuthToken();
     try {
       const response = await fetch("http://localhost:8080/api/drafts/latest", {
         method: "GET",

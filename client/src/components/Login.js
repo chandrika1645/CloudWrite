@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { signInWithGoogle, logout } from "../firebase";
 
 const Login = ({ onLogin }) => {
   const [user, setUser] = useState(null);
@@ -49,8 +48,9 @@ const Login = ({ onLogin }) => {
   };
 
   const handleLogin = () => {
-    const clientId="682944726651-bkdbs22ntpdqlqsot4oj7cjcjbvd4d29.apps.googleusercontent.com";
-    const redirectUri="http://localhost:8080/api/auth/google-callback";
+    const clientId=process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    const redirectUri=process.env.REACT_APP_GOOGLE_REDIRECT_URI;
+
     const scope = [
         "https://www.googleapis.com/auth/drive.file", 
         "openid",       

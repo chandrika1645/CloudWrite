@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import getAuthToken from "../util/getAuthUtil";
 import "./Styles/Editor.css";
 import { getAuth } from "firebase/auth";
 
@@ -18,7 +17,6 @@ const Editor = ({ userId }) => {
     if (draftId) {
       const fetchDraft = async () => {
         try {
-          const token = getAuthToken();
           const response = await fetch(
             `http://localhost:8080/api/drafts/${draftId}`,
             {
@@ -83,7 +81,6 @@ const Editor = ({ userId }) => {
     );
     if (!isConfirmed) return;
 
-    const token = getAuthToken();
     try {
       const response = await fetch(
         `http://localhost:8080/api/drafts/${draftId}`,
@@ -113,13 +110,14 @@ const Editor = ({ userId }) => {
     setIsUploading(true);
 
     try {
-      const token = getAuthToken();
-
       const response = await fetch(
         "http://localhost:8080/google-drive/upload",
         {
           method: "POST",
           credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({ title, content }),
         }
       );
