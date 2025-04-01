@@ -10,7 +10,6 @@ const Sidebar = () => {
         <span>+</span>
         <span>New</span>
       </button>
-
       <ul className="sidebar-menu">
         <li onClick={() => navigate("/")}>
           📁 <span>My Drive</span>

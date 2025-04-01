@@ -6,6 +6,7 @@ import DraftsList from "./components/Drafts";
 import Sidebar from "./components/Sidebar.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import UploadedDocs from "./components/Docs.js";
+import backgroundImage from "./assets/background-image.png"; 
 
 function App() {
   const [userId, setUserId] = useState(null);
@@ -16,7 +17,7 @@ function App() {
         <div className="login-container">
           <img
             className="main-content-1"
-            src="https://img.freepik.com/free-vector/blur-pink-blue-abstract-gradient-background-vector_53876-174836.jpg"
+            src={backgroundImage}
             alt="Background"
           />
           <div className="content">

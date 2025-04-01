@@ -110,7 +110,6 @@ const styles = {
     width: "100%",
     height: "60px",
     padding: "0 20px",
-    borderRadius: "8px",
   },
   userInfo: {
     display: "flex",
