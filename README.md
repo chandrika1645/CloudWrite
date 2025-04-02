@@ -9,8 +9,8 @@
 - [Project Overview](#project-overview)
 - [Features](#features)
 - [Security](#security)
-- [Screenshots](#screenshots)
 - [Demo Video](#demo-video)
+- [Screenshots](#screenshots)
 - [Backend Setup](#backend-setup)
 - [Frontend Setup](#frontend-setup)
 - [Error Handling](#error-handling)
@@ -57,26 +57,26 @@ CloudWrite enables users to **create, edit, and store documents** securely. Docu
 
 ---
 
-## 📸 **Screenshots**
-
-- **My Drive Page:**
- <img src="https://raw.githubusercontent.com/chandrika1645/CloudWrite/main/app-preview/my-drive.png" width="500">
-  
-- **Sign-Up Page:**
-<img src="https://raw.githubusercontent.com/chandrika1645/CloudWrite/main/app-preview/recents.png" width="500">
-
-- **Toast Notifications:**
-<img src="https://raw.githubusercontent.com/chandrika1645/CloudWrite/main/app-preview/uploads.png" width="500">
-
----
-
 ## 🎬 **Demo Video**
 
 Watch CloudWrite in action!  
 
 <a href="https://drive.google.com/file/d/1uQZlEtvScLQDR0SApsld9Cc2_pi5kflP/view?usp=drive_link">
-    <img src="https://github.com/chandrika1645/CloudWrite/blob/main/app-preview/video-preview.gif" width="500">
+    <img src="https://github.com/chandrika1645/CloudWrite/blob/main/app-preview/video-preview.gif" width="700">
 </a>
+
+---
+
+## 📸 **Screenshots**
+
+- **My Drive Page:**
+ <img src="https://raw.githubusercontent.com/chandrika1645/CloudWrite/main/app-preview/my-drive.png" width="700">
+  
+- **Sign-Up Page:**
+<img src="https://raw.githubusercontent.com/chandrika1645/CloudWrite/main/app-preview/recents.png" width="700">
+
+- **Toast Notifications:**
+<img src="https://raw.githubusercontent.com/chandrika1645/CloudWrite/main/app-preview/uploads.png" width="700">
 
 ---
 
