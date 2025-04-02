@@ -72,10 +72,10 @@ Watch CloudWrite in action!
 - **My Drive Page:**
  <img src="https://raw.githubusercontent.com/chandrika1645/CloudWrite/main/app-preview/my-drive.png" width="700">
   
-- **Sign-Up Page:**
+- **Recents Page:**
 <img src="https://raw.githubusercontent.com/chandrika1645/CloudWrite/main/app-preview/recents.png" width="700">
 
-- **Toast Notifications:**
+- **Google-drive uploads preview:**
 <img src="https://raw.githubusercontent.com/chandrika1645/CloudWrite/main/app-preview/uploads.png" width="700">
 
 ---
