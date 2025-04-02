@@ -59,11 +59,14 @@ CloudWrite enables users to **create, edit, and store documents** securely. Docu
 
 ## 📸 **Screenshots**
 
-- **Login Page:**  
-  ![Login Page](https://your-repo-link/screenshots/login-page.png)
+- **My Drive Page:**
+ <img src="https://raw.githubusercontent.com/chandrika1645/CloudWrite/main/app-preview/my-drive.png" width="500">
   
-- **Editor Page:**  
-  ![Editor Page](https://your-repo-link/screenshots/editor-page.png)
+- **Sign-Up Page:**
+<img src="https://raw.githubusercontent.com/chandrika1645/CloudWrite/main/app-preview/recents.png" width="500">
+
+- **Toast Notifications:**
+<img src="https://raw.githubusercontent.com/chandrika1645/CloudWrite/main/app-preview/uploads.png" width="500">
 
 ---
 
@@ -71,7 +74,9 @@ CloudWrite enables users to **create, edit, and store documents** securely. Docu
 
 Watch CloudWrite in action!  
 
-[![Watch the demo](https://your-repo-link/screenshots/demoVideo.gif)](https://drive.google.com/file/d/YOUR_DEMO_VIDEO_ID/view)
+<a href="https://drive.google.com/file/d/1uQZlEtvScLQDR0SApsld9Cc2_pi5kflP/view?usp=drive_link">
+    <img src="https://github.com/chandrika1645/CloudWrite/blob/main/app-preview/video-preview.gif" width="500">
+</a>
 
 ---
 
